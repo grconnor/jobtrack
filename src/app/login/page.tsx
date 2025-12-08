@@ -78,13 +78,13 @@ export default function LoginPage() {
                   className="btn btn-primary w-100"
                   disabled={loading}
                 >
-                  {loading ? "Loggin in..." : "Login"}
+                  {loading ? "Logging in..." : "Login"}
                 </button>
               </form>
 
               <div className="text-center mt-3">
                 <p className="mb-0">
-                  Don&apos;t have an account?
+                  Don&apos;t have an account?{" "}
                   <Link href="/register" className="text-decoration-none">
                     Register here
                   </Link>
