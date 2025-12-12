@@ -13,7 +13,8 @@ export async function GET(
       return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
     }
 
-    const { id } = await params;
+    const resolvedParams = await params;
+    const id = resolvedParams.id;
 
     const appCheck = await pool.query(
       `SELECT id FROM applications WHERE id = $1 AND user_id = $2`,
@@ -53,7 +54,8 @@ export async function POST(
       return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
     }
 
-    const { id } = await params;
+    const resolvedParams = await params;
+    const id = resolvedParams.id;
     const body = await request.json();
 
     const appCheck = await pool.query(

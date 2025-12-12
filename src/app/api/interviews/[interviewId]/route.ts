@@ -13,7 +13,8 @@ export async function PUT(
       return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
     }
 
-    const { interviewId } = await params;
+    const resolvedParams = await params;
+    const interviewId = resolvedParams.interviewId;
     const body = await request.json();
 
     const interviewCheck = await pool.query(
@@ -87,7 +88,8 @@ export async function DELETE(
       return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
     }
 
-    const { interviewId } = await params;
+    const resolvedParams = await params;
+    const interviewId = resolvedParams.interviewId;
 
     const interviewCheck = await pool.query(
       `SELECT i.id FROM interviews i

@@ -14,6 +14,7 @@ export async function GET(
     }
 
     const { id } = await params;
+    console.log("id: ", id)
 
     const applicationResult = await pool.query(
       `SELECT * FROM applications WHERE id = $1 AND user_id = $2`,

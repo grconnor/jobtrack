@@ -32,40 +32,40 @@ export default function EditApplicationPage({
   });
 
   useEffect(() => {
-    fetchApplication();
-  }, []);
+    const fetchApplication = async () => {
+      try {
+        const response = await fetch(`/api/applications/${resolvedParams.id}`);
+        if (response.ok) {
+          const data = await response.json();
+          const app = data.application;
 
-  const fetchApplication = async () => {
-    try {
-      const response = await fetch(`/api/applications/${resolvedParams.id}`);
-      if (response.ok) {
-        const data = await response.json();
-        const app = data.application;
-
-        setFormData({
-          companyName: app.company_name,
-          positionTitle: app.position_title,
-          jobDescription: app.job_description || "",
-          location: app.location || "",
-          salaryRange: app.salary_range || "",
-          jobUrl: app.job_url || "",
-          status: app.status,
-          priority: app.priority,
-          appliedDate: app.applied_date.split("T")[0],
-          followUpDate: app.follow_up_date
-            ? app.follow_up_date.split("T")[0]
-            : "",
-          notes: app.notes || "",
-        });
-      } else {
-        setError("Application not found");
+          setFormData({
+            companyName: app.company_name,
+            positionTitle: app.position_title,
+            jobDescription: app.job_description || "",
+            location: app.location || "",
+            salaryRange: app.salary_range || "",
+            jobUrl: app.job_url || "",
+            status: app.status,
+            priority: app.priority,
+            appliedDate: app.applied_date.split("T")[0],
+            followUpDate: app.follow_up_date
+              ? app.follow_up_date.split("T")[0]
+              : "",
+            notes: app.notes || "",
+          });
+        } else {
+          setError("Application not found");
+        }
+      } catch (err) {
+        setError("Error loading application");
+      } finally {
+        setLoading(false);
       }
-    } catch (err) {
-      setError("Error loading application");
-    } finally {
-      setLoading(false);
-    }
-  };
+    };
+
+    fetchApplication();
+  }, [resolvedParams.id]);
 
   const handleChange = (
     e: React.ChangeEvent<

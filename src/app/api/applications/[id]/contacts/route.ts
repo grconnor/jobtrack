@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import pool from "@/lib/db";
 import { getCurrentUser } from "@/lib/auth";
 
-// GET all contaacts for an application
+// GET all contacts for an application
 export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
@@ -13,7 +13,8 @@ export async function GET(
       return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
     }
 
-    const { id } = await params;
+    const resolvedParams = await params;
+    const id = await resolvedParams.id;
 
     const appCheck = await pool.query(
       `SELECT id FROM applications WHERE id = $1 AND user_id = $2`,
@@ -52,7 +53,8 @@ export async function POST(
       return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
     }
 
-    const { id } = await params;
+    const resolvedParams = await params;
+    const id = resolvedParams.id;
     const body = await request.json();
 
     const appCheck = await pool.query(

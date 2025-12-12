@@ -3,7 +3,6 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import DashboardLayout from "@/components/DashboardLayout";
-import Link from "next/link";
 import { Alert, Button, Col, Container, Row } from "react-bootstrap";
 
 export default function NewApplicationPage() {

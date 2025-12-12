@@ -13,7 +13,8 @@ export async function PUT(
       return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
     }
 
-    const { contactId } = await params;
+    const resolvedParams = await params;
+    const contactId = resolvedParams.contactId;
     const body = await request.json();
 
     const contactCheck = await pool.query(
@@ -74,7 +75,8 @@ export async function DELETE(
       return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
     }
 
-    const { contactId } = await params;
+    const resolvedParams = await params;
+    const contactId = resolvedParams.contactId;
 
     const contactCheck = await pool.query(
       `SELECT c.id FROM contacts c

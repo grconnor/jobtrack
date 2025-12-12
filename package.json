@@ -15,6 +15,7 @@
     "axios": "^1.13.2",
     "bcryptjs": "^3.0.3",
     "bootstrap": "^5.3.8",
+    "bootstrap-icons": "^1.13.1",
     "date-fns": "^4.1.0",
     "dotenv": "^17.2.3",
     "jose": "^6.1.3",
