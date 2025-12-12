@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
-import { use, useEffect, useState } from "react";
+import { use, useCallback, useEffect, useState } from "react";
 import DashboardLayout from "@/components/DashboardLayout";
 import Link from "next/link";
 import { format } from "date-fns";
@@ -47,23 +47,23 @@ export default function ApplicationDetailPage({
     notes: "",
   });
 
-  useEffect(() => {
-    const fetchApplication = async () => {
-      try {
-        const response = await fetch(`/api/applications/${resolvedParams.id}`);
-        if (response.ok) {
-          const appData = await response.json();
-          setData(appData);
-        }
-      } catch (error) {
-        console.error("Error fetching application: ", error);
-      } finally {
-        setLoading(false);
+  const fetchApplication = useCallback(async () => {
+    try {
+      const response = await fetch(`/api/applications/${resolvedParams.id}`);
+      if (response.ok) {
+        const appData = await response.json();
+        setData(appData);
       }
-    };
-
-    fetchApplication();
+    } catch (error) {
+      console.error("Error fetching application: ", error);
+    } finally {
+      setLoading(false);
+    }
   }, [resolvedParams.id]);
+
+  useEffect(() => {
+    fetchApplication();
+  }, [fetchApplication]);
 
   const getStatusBadgeClass = (status: string) => {
     const classes: any = {
@@ -496,7 +496,9 @@ export default function ApplicationDetailPage({
                       <div key={interview.id} className="list-group-item">
                         <div className="d-flex justify-content-between align-items-start">
                           <div>
-                            <h6 className="mb-1">{interview.interview_type}</h6>
+                            <h5 className="mb-1 fw-bold">
+                              {interview.interview_type}
+                            </h5>
                             <p className="mb-1">
                               <strong>Date:</strong>{" "}
                               {format(
@@ -523,6 +525,7 @@ export default function ApplicationDetailPage({
                             )}
                             {interview.notes && (
                               <p className="mb-0 mt-2">
+                                <strong>Notes:</strong>{" "}
                                 <small>{interview.notes}</small>
                               </p>
                             )}
@@ -555,7 +558,7 @@ export default function ApplicationDetailPage({
                   {data.statusHistory.map((history: any, index: number) => (
                     <div key={history.id} className="mb-3">
                       <div className="d-flex">
-                        <div className="me-3">
+                        <div className="me-3" style={{ minWidth: "100px" }}>
                           <span
                             className={`badge ${getStatusBadgeClass(
                               history.status
@@ -565,7 +568,10 @@ export default function ApplicationDetailPage({
                           </span>
                         </div>
                         <div>
-                          <p className="mb-0">{history.notes}</p>
+                          <p
+                            className="mb-0"
+                            dangerouslySetInnerHTML={{ __html: history.notes }}
+                          />
                           <small className="text-muted">
                             {format(
                               new Date(history.changed_at),
@@ -603,16 +609,19 @@ export default function ApplicationDetailPage({
                   <Form.Label>Name *</Form.Label>
                   <Form.Control
                     type="text"
+                    placeholder="e.g., John Doe, Jane Smith"
                     value={contactForm.name}
                     onChange={(e) =>
                       setContactForm({ ...contactForm, name: e.target.value })
                     }
+                    required
                   />
                 </Form.Group>
                 <Form.Group className="mb-3">
                   <Form.Label>Role</Form.Label>
                   <Form.Control
                     type="text"
+                    placeholder="e.g., CEO, Main Interviewer"
                     value={contactForm.role}
                     onChange={(e) =>
                       setContactForm({ ...contactForm, role: e.target.value })
@@ -623,6 +632,7 @@ export default function ApplicationDetailPage({
                   <Form.Label>Email</Form.Label>
                   <Form.Control
                     type="email"
+                    placeholder="johndoe@gmail.com"
                     value={contactForm.email}
                     onChange={(e) =>
                       setContactForm({ ...contactForm, email: e.target.value })
@@ -633,6 +643,7 @@ export default function ApplicationDetailPage({
                   <Form.Label>Phone</Form.Label>
                   <Form.Control
                     type="tel"
+                    placeholder="+123 456 7890"
                     value={contactForm.phone}
                     onChange={(e) =>
                       setContactForm({ ...contactForm, phone: e.target.value })
@@ -643,6 +654,7 @@ export default function ApplicationDetailPage({
                   <Form.Label>LinkedIn URL</Form.Label>
                   <Form.Control
                     type="url"
+                    placeholder="https://linkedin.com/in/xyz"
                     value={contactForm.linkedinUrl}
                     onChange={(e) =>
                       setContactForm({
@@ -711,7 +723,7 @@ export default function ApplicationDetailPage({
                 </Form.Group>
 
                 <Form.Group className="mb-3">
-                  <Form.Label>Scheduled Data & Time *</Form.Label>
+                  <Form.Label>Scheduled Date & Time *</Form.Label>
                   <Form.Control
                     type="datetime-local"
                     value={interviewForm.scheduledAt}
@@ -729,6 +741,7 @@ export default function ApplicationDetailPage({
                   <Form.Label>Duration (minutes)</Form.Label>
                   <Form.Control
                     type="number"
+                    placeholder="60"
                     value={interviewForm.durationMinutes}
                     onChange={(e) =>
                       setInterviewForm({

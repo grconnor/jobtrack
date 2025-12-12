@@ -106,6 +106,7 @@ export default function NewApplicationPage() {
                         className="form-control"
                         id="companyName"
                         name="companyName"
+                        placeholder="Google"
                         value={formData.companyName}
                         onChange={handleChange}
                         required
@@ -120,6 +121,7 @@ export default function NewApplicationPage() {
                         className="form-control"
                         id="positionTitle"
                         name="positionTitle"
+                        placeholder="Engineer"
                         value={formData.positionTitle}
                         onChange={handleChange}
                         required

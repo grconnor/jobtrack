@@ -14,7 +14,6 @@ export async function GET(
     }
 
     const { id } = await params;
-    console.log("id: ", id)
 
     const applicationResult = await pool.query(
       `SELECT * FROM applications WHERE id = $1 AND user_id = $2`,
@@ -149,14 +148,21 @@ export async function PUT(
       ]
     );
 
+    const formatStatus = (status: string) => {
+      return status.replace(/_/g, " ").replace(/\b\w/g, (l) => l.toUpperCase());
+    };
+
     if (status !== existingApplication.status) {
+      const oldStatus = formatStatus(existingApplication.status);
+      const newStatus = formatStatus(status);
+
       await pool.query(
         `INSERT INTO status_history (application_id, status, notes)
         VALUES ($1, $2, $3)`,
         [
           id,
           status,
-          `Status changed from ${existingApplication.status} to ${status}`,
+          `Status changed from <strong>${oldStatus}</strong> to <strong>${newStatus}</strong>`,
         ]
       );
     }
